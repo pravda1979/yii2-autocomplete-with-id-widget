@@ -1,6 +1,6 @@
 <?php
 
-namespace pravda1979\core;
+namespace pravda1979\AutoCompleteWithId;
 
 use yii\bootstrap\Html;
 use yii\helpers\ArrayHelper;
