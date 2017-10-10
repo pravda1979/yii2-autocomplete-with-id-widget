@@ -1,0 +1,22 @@
+{
+    "name": "pravda1979/yii2-autocomplete-with-id-widget",
+    "description": "Yii2 Jui AutoComplete with Id field widget",
+    "type": "yii2-extension",
+    "keywords": ["yii2","extension","autocomplete"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Pravda Aleksei",
+            "email": "pravda.aleksei@gmail.com"
+        }
+    ],
+    "require": {
+        "yiisoft/yii2": ">=2.0.4",
+        "bower-asset/jquery-ui": "1.11.*@stable"
+    },
+    "autoload": {
+        "psr-4": {
+            "pravda1979\\AutoCompleteWithId\\": ""
+        }
+    }
+}
