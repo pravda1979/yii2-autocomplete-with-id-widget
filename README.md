@@ -28,4 +28,4 @@ Usage
 Once the extension is installed, simply use it in your code by  :
 
 ```php
-<?= \pravda1979\AutoCompleteWithId\AutoloadExample::widget(); ?>```
+<?= $form->field($model, 'attribute_id')->widget(AutoCompleteWithId::className()); ?>```
