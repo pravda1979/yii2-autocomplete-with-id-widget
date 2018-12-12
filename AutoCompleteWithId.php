@@ -60,7 +60,7 @@ class AutoCompleteWithId extends \yii\jui\AutoComplete
 
             if (!isset($this->options['textValue'])) {
                 $attributeName = lcfirst($modelName);
-                if($this->model->hasProperty($attributeName)){
+                if ($this->model->hasProperty($attributeName)) {
                     $value = $this->model->$attributeName ? $this->model->$attributeName->getFullName() : null;
                     $this->textValue = $value;
                 }
@@ -73,7 +73,7 @@ class AutoCompleteWithId extends \yii\jui\AutoComplete
                 'id' => $id,
                 'class' => 'form-control',
                 'oninput' => new JsExpression("if ($('#$id').val()!='') $('#$id').val('').change();"),
-                'ondblclick' => "$('#$id_text').autocomplete( 'search', '').focus();",
+                'ondblclick' => "$('#$id_text').autocomplete( 'search').focus();",
             ], $this->options);
 
             $route = Inflector::camel2id($modelName);
@@ -88,7 +88,7 @@ class AutoCompleteWithId extends \yii\jui\AutoComplete
                     $("#' . $id_text . '").autocomplete( "instance" )._renderItem = function( ul, item ) {
 
                     if (this.term.length < 1){
-                        return $( "<li>" ).append( item.label ).appendTo( ul );
+                        return $( "<li class="+ (item.id == null ? "ui-state-disabled" : "") +"></li>" ).data( "item.autocomplete", item ).append( "<div>" + item.label + "</div>" ).appendTo( ul );
                     }
 
                     var term = $.trim(this.term.replace(/[\\^$*+?.()|[\]{}]/g, "\\\$&")).replace(/\s+/g, "|");
@@ -96,7 +96,7 @@ class AutoCompleteWithId extends \yii\jui\AutoComplete
                     var highlightedResult = item.label.replace( re, "<span class=\"found-string\">$1</span>" );
 
                     return $( "<li></li>" )
-                        .data( "item.autocomplete", item ).append( "<a>" + highlightedResult + "</a>" ).appendTo( ul );
+                        .data( "item.autocomplete", item ).append( "<div>" + highlightedResult + "</div>" ).appendTo( ul );
                     };
                 }'),
                 'change' => new JsExpression("
@@ -117,11 +117,20 @@ class AutoCompleteWithId extends \yii\jui\AutoComplete
                             if(ui.item.id == null){
                                 event.preventDefault();
                                 $('#$id').val('').change();
-                                $('#$id_text').val($('#$id_text').val());
+                                $('#$id_text').val('');
                                 return false;
                             }
                             if ($('#$id').val()!=ui.item.id) {
                                 $('#$id').val(ui.item.id).change();
+                            }
+                        }
+                    "),
+                'focus' => new JsExpression("
+                        function( event, ui ) {
+                            if(ui.item.id == null){
+                                event.preventDefault();
+                                $('#$id_text').val('');
+                                return false;
                             }
                         }
                     "),
@@ -165,14 +174,13 @@ class AutoCompleteWithId extends \yii\jui\AutoComplete
             // Кнопка отображения списка
             $input .= '<span class="input-group-btn">';
             $input .= Html::button('<span class="glyphicon glyphicon-chevron-down"></span>', [
-                'onclick' => "$('#{$this->textInputId}').autocomplete( 'search', '').focus();",
+                'onclick' => "$('#{$this->textInputId}').autocomplete( 'search').focus();",
                 'class' => 'form-control btn btn-default', 'tabindex' => -1,
                 'type' => 'button',
             ]);
             $input .= '</span>';
             $input .= '</div>';
             $input .= Html::activeHiddenInput($this->model, $this->attribute, $this->options);
-//            $input .= Html::activeTextInput($this->model, $this->attribute, $this->options);
 
             return $input;
         } else {
