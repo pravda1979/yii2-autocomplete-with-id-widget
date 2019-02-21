@@ -86,9 +86,13 @@ class AutoCompleteWithId extends \yii\jui\AutoComplete
                 'autoFocus' => true,
                 'create' => new JsExpression('function( event, ui ) {
                     $("#' . $id_text . '").autocomplete( "instance" )._renderItem = function( ul, item ) {
-
+                    
+                    if(item.info !== undefined){
+                        return $( "<li class=\"ui-state-disabled\"></li>" ).data( "item.autocomplete", item.info ).append( "<div>" + item.info.label + "</div>" ).appendTo( ul );
+                    }
+                    
                     if (this.term.length < 1){
-                        return $( "<li class="+ (item.id == null ? "ui-state-disabled" : "") +"></li>" ).data( "item.autocomplete", item ).append( "<div>" + item.label + "</div>" ).appendTo( ul );
+                        return $( "<li></li>" ).data( "item.autocomplete", item ).append( "<div>" + item.label + "</div>" ).appendTo( ul );
                     }
 
                     var term = $.trim(this.term.replace(/[\\^$*+?.()|[\]{}]/g, "\\\$&")).replace(/\s+/g, "|");
@@ -100,7 +104,7 @@ class AutoCompleteWithId extends \yii\jui\AutoComplete
                     };
                 }'),
                 'change' => new JsExpression("
-                        function( event, ui ) { 
+                        function( event, ui ) {
                             if(ui.item == null){
                                 event.preventDefault();
                                 $('#$id').val('').change();
@@ -114,7 +118,7 @@ class AutoCompleteWithId extends \yii\jui\AutoComplete
                     "),
                 'select' => new JsExpression("
                         function( event, ui ) {
-                            if(ui.item.id == null){
+                            if(ui.item.id == undefined){
                                 event.preventDefault();
                                 $('#$id').val('').change();
                                 $('#$id_text').val('');
@@ -122,15 +126,6 @@ class AutoCompleteWithId extends \yii\jui\AutoComplete
                             }
                             if ($('#$id').val()!=ui.item.id) {
                                 $('#$id').val(ui.item.id).change();
-                            }
-                        }
-                    "),
-                'focus' => new JsExpression("
-                        function( event, ui ) {
-                            if(ui.item.id == null){
-                                event.preventDefault();
-                                $('#$id_text').val('');
-                                return false;
                             }
                         }
                     "),
