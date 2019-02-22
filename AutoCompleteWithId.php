@@ -178,7 +178,7 @@ class AutoCompleteWithId extends \yii\jui\AutoComplete
                 'onclick' => "$('#{$this->textInputId}').val('').change().keyup(); $('#{$this->options['id']}').val('').change(); $('#{$this->textInputId}').focus()",
                 'class' => 'btn btn-warning', 'tabindex' => -1,
                 'type' => 'button',
-                'style' => 'display: ' . ($this->attribute ? 'inline-block' : 'none')
+                'style' => 'display: ' . (empty($this->model->{$this->attribute}) ? 'none' : 'inline-block')
             ]);
 
             $btnId = Html::activeHiddenInput($this->model, $this->attribute, $this->options);
