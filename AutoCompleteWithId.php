@@ -175,7 +175,7 @@ class AutoCompleteWithId extends \yii\jui\AutoComplete
             // Кнопка очистки значения
             $btnClear = Html::a('<span class="glyphicon glyphicon-remove"></span>', null, [
                 'id' => $this->textInputId.'_btn_clear',
-                'onclick' => "$('#{$this->textInputId}').val('').change().keyup(); $('#{$this->options['id']}').val('').change();",
+                'onclick' => "$('#{$this->textInputId}').val('').change().keyup(); $('#{$this->options['id']}').val('').change(); $('#{$this->textInputId}').focus()",
                 'class' => 'btn btn-warning', 'tabindex' => -1,
                 'type' => 'button',
                 'style'=>'display: none'
