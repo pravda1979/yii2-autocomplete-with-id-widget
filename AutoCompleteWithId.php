@@ -109,12 +109,12 @@ class AutoCompleteWithId extends \yii\jui\AutoComplete
                                 event.preventDefault();
                                 $('#$id').val('').change();
                                 $('#$id_text').val('');                                
-                                $('#".$id_text."_btn_clear').hide('slow');
+                                $('#" . $id_text . "_btn_clear').hide('slow');
                                 return false;
                             }
                             if ($('#$id').val()!=ui.item.id) {
                                 $('#$id').val(ui.item.id).change();
-                                $('#".$id_text."_btn_clear').show('slow');
+                                $('#" . $id_text . "_btn_clear').show('slow');
                             }
                         }
                     "),
@@ -124,12 +124,12 @@ class AutoCompleteWithId extends \yii\jui\AutoComplete
                                 event.preventDefault();
                                 $('#$id').val('').change();
                                 $('#$id_text').val('');
-                                $('#".$id_text."_btn_clear').hide('slow');
+                                $('#" . $id_text . "_btn_clear').hide('slow');
                                 return false;
                             }
                             if ($('#$id').val()!=ui.item.id) {
                                 $('#$id').val(ui.item.id).change();
-                                $('#".$id_text."_btn_clear').show('slow');
+                                $('#" . $id_text . "_btn_clear').show('slow');
                             }
                         }
                     "),
@@ -155,10 +155,10 @@ class AutoCompleteWithId extends \yii\jui\AutoComplete
     {
         if ($this->hasModel()) {
 
-            $btnText= Html::activeTextInput($this->model, $this->attribute, ArrayHelper::merge(
+            $btnText = Html::activeTextInput($this->model, $this->attribute, ArrayHelper::merge(
                 $this->options,
                 [
-                    'onkeyup' => "if($('#{$this->textInputId}').val()==''){ $('#".$this->textInputId."_btn_clear').hide('slow') }else{ $('#".$this->textInputId."_btn_clear').show('slow') };",
+                    'onkeyup' => "if($('#{$this->textInputId}').val()==''){ $('#" . $this->textInputId . "_btn_clear').hide('slow') }else{ $('#" . $this->textInputId . "_btn_clear').show('slow') };",
                     'onblur' => "$('#{$this->options['id']}').blur();",
                     'value' => $this->textValue,
                     'id' => $this->textInputId,
@@ -174,18 +174,19 @@ class AutoCompleteWithId extends \yii\jui\AutoComplete
 
             // Кнопка очистки значения
             $btnClear = Html::a('<span class="glyphicon glyphicon-remove"></span>', null, [
-                'id' => $this->textInputId.'_btn_clear',
+                'id' => $this->textInputId . '_btn_clear',
                 'onclick' => "$('#{$this->textInputId}').val('').change().keyup(); $('#{$this->options['id']}').val('').change(); $('#{$this->textInputId}').focus()",
                 'class' => 'btn btn-warning', 'tabindex' => -1,
                 'type' => 'button',
-                'style'=>'display: none'
+                'style' => 'display: ' . ($this->attribute ? 'inline-block' : 'none')
             ]);
-            $btnId= Html::activeHiddenInput($this->model, $this->attribute, $this->options);
+
+            $btnId = Html::activeHiddenInput($this->model, $this->attribute, $this->options);
 
             return " 
             <div class=\"input-group\">
-                $btnId
                 $btnText
+                $btnId
                 <span class=\"input-group-btn\">
                     $btnClear
                     $btnSearch
