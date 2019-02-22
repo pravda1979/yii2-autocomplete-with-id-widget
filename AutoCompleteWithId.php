@@ -109,10 +109,12 @@ class AutoCompleteWithId extends \yii\jui\AutoComplete
                                 event.preventDefault();
                                 $('#$id').val('').change();
                                 $('#$id_text').val('');                                
+                                $('#".$id_text."_btn_clear').hide('slow');
                                 return false;
                             }
                             if ($('#$id').val()!=ui.item.id) {
                                 $('#$id').val(ui.item.id).change();
+                                $('#".$id_text."_btn_clear').show('slow');
                             }
                         }
                     "),
@@ -122,10 +124,12 @@ class AutoCompleteWithId extends \yii\jui\AutoComplete
                                 event.preventDefault();
                                 $('#$id').val('').change();
                                 $('#$id_text').val('');
+                                $('#".$id_text."_btn_clear').hide('slow');
                                 return false;
                             }
                             if ($('#$id').val()!=ui.item.id) {
                                 $('#$id').val(ui.item.id).change();
+                                $('#".$id_text."_btn_clear').show('slow');
                             }
                         }
                     "),
@@ -150,32 +154,44 @@ class AutoCompleteWithId extends \yii\jui\AutoComplete
     public function renderWidget()
     {
         if ($this->hasModel()) {
-            $input = '';
 
-            $input .= '<div class="input-group">';
-            $input .= Html::activeTextInput($this->model, $this->attribute, ArrayHelper::merge(
+            $btnText= Html::activeTextInput($this->model, $this->attribute, ArrayHelper::merge(
                 $this->options,
                 [
+                    'onkeyup' => "if($('#{$this->textInputId}').val()==''){ $('#".$this->textInputId."_btn_clear').hide('slow') }else{ $('#".$this->textInputId."_btn_clear').show('slow') };",
                     'onblur' => "$('#{$this->options['id']}').blur();",
                     'value' => $this->textValue,
                     'id' => $this->textInputId,
                 ]
             ));
-//            $input .= Html::a('<span class="glyphicon glyphicon-remove"></span>', null, [
-//                'onclick' => "$('#{$this->textInputId}').val('')",
-//                'class'=>'glyphicon glyphicon-remove form-control-feedback',
-//            ]);
 
             // Кнопка отображения списка
-            $input .= '<span class="input-group-btn">';
-            $input .= Html::button('<span class="glyphicon glyphicon-chevron-down"></span>', [
+            $btnSearch = Html::a('<span class="glyphicon glyphicon-chevron-down"></span>', null, [
                 'onclick' => "$('#{$this->textInputId}').autocomplete( 'search').focus();",
-                'class' => 'form-control btn btn-default', 'tabindex' => -1,
+                'class' => 'btn btn-default', 'tabindex' => -1,
                 'type' => 'button',
             ]);
-            $input .= '</span>';
-            $input .= '</div>';
-            $input .= Html::activeHiddenInput($this->model, $this->attribute, $this->options);
+
+            // Кнопка очистки значения
+            $btnClear = Html::a('<span class="glyphicon glyphicon-remove"></span>', null, [
+                'id' => $this->textInputId.'_btn_clear',
+                'onclick' => "$('#{$this->textInputId}').val('').change().keyup(); $('#{$this->options['id']}').val('').change();",
+                'class' => 'btn btn-warning', 'tabindex' => -1,
+                'type' => 'button',
+                'style'=>'display: none'
+            ]);
+            $btnId= Html::activeHiddenInput($this->model, $this->attribute, $this->options);
+
+            return " 
+            <div class=\"input-group\">
+                $btnId
+                $btnText
+                <span class=\"input-group-btn\">
+                    $btnClear
+                    $btnSearch
+                  </span>
+            </div>
+        ";
 
             return $input;
         } else {
